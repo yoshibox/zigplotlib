@@ -66,7 +66,7 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
 
     const stroke_dash_array: ?[]const f32 = if (self.style.dash) |dash| try allocator.dupe(f32, &[_]f32{dash}) else null;
 
-    var commands = std.ArrayList(SVG.Path.Command).init(allocator);
+    var commands = std.ArrayList(SVG.Path.Command).empty;
     var started = false;
     if (self.x) |x_| {
         for (x_, self.y, 0..) |x, y, i| {
@@ -78,7 +78,7 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
             const y1 = info.computeY(y);
 
             if (!started) {
-                try commands.append(.{
+                try commands.append(allocator, .{
                     .MoveTo = .{
                         .x = x1,
                         .y = y1,
@@ -104,7 +104,7 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
             const cpe_x = p_end_x + self.style.smooth * (p_start_x - p_next_x);
             const cpe_y = p_end_y + self.style.smooth * (p_start_y - p_next_y);
 
-            try commands.append(.{
+            try commands.append(allocator, .{
                 .CubicBezierCurveTo = .{
                     .x1 = cps_x,
                     .y1 = cps_y,
@@ -125,7 +125,7 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
             const y1 = info.computeY(y);
 
             if (!started) {
-                try commands.append(.{
+                try commands.append(allocator, .{
                     .MoveTo = .{
                         .x = x1,
                         .y = y1,
@@ -151,7 +151,7 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
             const cpe_x = p_end_x + self.style.smooth * (p_start_x - p_next_x);
             const cpe_y = p_end_y + self.style.smooth * (p_start_y - p_next_y);
 
-            try commands.append(.{
+            try commands.append(allocator, .{
                 .CubicBezierCurveTo = .{
                     .x1 = cps_x,
                     .y1 = cps_y,

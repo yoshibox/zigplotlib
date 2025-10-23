@@ -52,19 +52,19 @@ pub fn init(options: Options) Rect {
 /// Write the rectangle to the given writer
 pub fn writeTo(self: *const Rect, writer: anytype) anyerror!void {
     try writer.writeAll("<rect ");
-    try writer.print("x=\"{}\" ", .{self.options.x});
-    try writer.print("y=\"{}\" ", .{self.options.y});
-    try writer.print("width=\"{}\" ", .{self.options.width});
-    try writer.print("height=\"{}\" ", .{self.options.height});
-    try writer.print("rx=\"{}\" ", .{self.options.radius_x});
-    try writer.print("ry=\"{}\" ", .{self.options.radius_y});
+    try writer.print("x=\"{f}\" ", .{self.options.x});
+    try writer.print("y=\"{f}\" ", .{self.options.y});
+    try writer.print("width=\"{f}\" ", .{self.options.width});
+    try writer.print("height=\"{f}\" ", .{self.options.height});
+    try writer.print("rx=\"{f}\" ", .{self.options.radius_x});
+    try writer.print("ry=\"{f}\" ", .{self.options.radius_y});
     if (self.options.fill) |fill| try writer.print("fill=\"#{X:0>6}\" ", .{fill})
     else try writer.writeAll("fill=\"none\" ");
     try writer.print("fill-opacity=\"{}\" ", .{self.options.fill_opacity});
     if (self.options.stroke) |stroke| try writer.print("stroke=\"#{X:0>6}\" ", .{stroke})
     else try writer.writeAll("stroke=\"none\" ");
     try writer.print("stroke-opacity=\"{}\" ", .{self.options.stroke_opacity});
-    try writer.print("stroke-width=\"{}\" ", .{self.options.stroke_width});
+    try writer.print("stroke-width=\"{f}\" ", .{self.options.stroke_width});
     try writer.print("opacity=\"{}\" ", .{self.options.opacity});
     try writer.writeAll("/>");
 }

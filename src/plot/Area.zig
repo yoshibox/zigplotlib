@@ -63,8 +63,8 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
     const self: *const Area = @ptrCast(@alignCast(impl));
 
     if (self.x) |x_| {
-        var points = std.ArrayList(f32).init(allocator);
-        try points.appendSlice(&[_]f32 {info.computeX(x_[0]), info.getBaseY()});
+        var points = std.ArrayList(f32).empty;
+        try points.appendSlice(allocator, &[_]f32 {info.computeX(x_[0]), info.getBaseY()});
         var last_x: ?f32 = null;
         for (x_, self.y) |x, y| {
             if (!info.x_range.contains(x)) continue;
@@ -77,21 +77,21 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
             const x2 = info.computeX(x);
             const y2 = info.computeY(y);
 
-            try points.append(x2);
-            try points.append(y2);
+            try points.append(allocator, x2);
+            try points.append(allocator, y2);
         }
 
-        if (last_x) |last_x_| try points.appendSlice(&[_]f32 {info.computeX(last_x_), info.getBaseY()});
+        if (last_x) |last_x_| try points.appendSlice(svg.allocator, &[_]f32 {info.computeX(last_x_), info.getBaseY()});
         try svg.addPolyline(.{
-            .points = try points.toOwnedSlice(),
+            .points = try points.toOwnedSlice(allocator),
             .fill = self.style.color,
             .fill_opacity = self.style.opacity,
             .stroke = self.style.color,
             .stroke_width = .{ .pixel = self.style.width },
         });
     } else {
-        var points = std.ArrayList(f32).init(allocator);
-        try points.appendSlice(&[_]f32 {info.computeX(0.0), info.getBaseY()});
+        var points = std.ArrayList(f32).empty;
+        try points.appendSlice(allocator, &[_]f32 {info.computeX(0.0), info.getBaseY()});
         var last_x: ?f32 = null;
         for (self.y, 0..) |y, x| {
             if (!info.x_range.contains(@floatFromInt(x))) continue;
@@ -104,13 +104,13 @@ fn draw(impl: *const anyopaque, allocator: Allocator, svg: *SVG, info: FigureInf
             const x2 = info.computeX(@floatFromInt(x));
             const y2 = info.computeY(y);
 
-            try points.append(x2);
-            try points.append(y2);
+            try points.append(allocator, x2);
+            try points.append(allocator, y2);
         }
 
-        if (last_x) |last_x_| try points.appendSlice(&[_]f32 {info.computeX(last_x_), info.getBaseY()});
+        if (last_x) |last_x_| try points.appendSlice(allocator, &[_]f32 {info.computeX(last_x_), info.getBaseY()});
         try svg.addPolyline(.{
-            .points = try points.toOwnedSlice(),
+            .points = try points.toOwnedSlice(allocator),
             .fill = self.style.color,
             .fill_opacity = self.style.opacity,
             .stroke = self.style.color,

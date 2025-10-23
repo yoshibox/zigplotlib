@@ -1,4 +1,5 @@
 # Zig Plot Lib
+>
 > This project is currently stalled as I don't have much time to work on it. Anybody can freely create a PR to add new features and I'll review it; or you can also fork it yourself and add whatever you would like.
 
 The Zig Plot Lib is a library for plotting data in Zig. It is designed to be easy to use and to have a simple API.
@@ -8,7 +9,9 @@ The Zig Plot Lib is a library for plotting data in Zig. It is designed to be eas
 I'm developping this library with version 0.13.0.
 
 ## Installation
+
 You can install the library by adding it to the `build.zig.zon` file, either manually like so:
+
 ```zig
 .{
     ...
@@ -23,16 +26,19 @@ You can install the library by adding it to the `build.zig.zon` file, either man
 ```
 
 The hash can be found using the builtin command:
+
 ```sh
 zig fetch https://github.com/Remy2701/zigplotlib/archive/main.tar.gz
 ```
 
 Or you can also add it automatically like so:
+
 ```sh
 zig fetch --save https://github.com/Remy2701/zigplotlib/archive/main.tar.gz
 ```
 
 Then in the `build.zig`, you can add the following:
+
 ```zig
 const zigplotlib = b.dependency("zigplotlib", .{
     .target = target,
@@ -45,6 +51,7 @@ exe.root_module.addImport("plotlib", zigplotlib.module("zigplotlib"));
 The name of the module (`plotlib`) can be changed to whatever you want.
 
 Finally in your code you can import the module using the following:
+
 ```zig
 const plotlib = @import("plotlib");
 ```
@@ -151,7 +158,11 @@ pub fn main() !void {
     var file = try std.fs.cwd().createFile("out.svg", .{});
     defer file.close();
 
-    try svg.writeTo(file.writer());
+    var file_buffer: [1024]u8 = undefined;
+    var file_writer = file.writer(&file_buffer);
+    const file_int = &file_writer.interface;
+
+    try svg.writeTo(file_int);
 }
 ```
 
@@ -188,6 +199,7 @@ The figure takes two arguments, the allocator (used to store the plot and genera
 | `legend` | `...` | The style for the legend |
 
 The `title` option contains the following parameters:
+
 | Option | Type | Description |
 | --- | --- | --- |
 | `text` | `[]const u8` | The title of the figure |
@@ -197,6 +209,7 @@ The `title` option contains the following parameters:
 | `padding` | `f32` | The padding between the plot and the title |
 
 The `value_padding` option is defined like so:
+
 ```zig
 pub const ValuePercent = union(enum) {
     value: f32,
@@ -223,7 +236,7 @@ The `axis` option contains more parameters:
 | `width` | `f32` | The width of the axis |
 | `label_color` | `RGB (u48)` | The color of the labels |
 | `label_size` | `f32` | The font size of the labels |
-| `label_padding` | `f32` | The padding between the labels and the axis | 
+| `label_padding` | `f32` | The padding between the labels and the axis |
 | `label_font` | `[]const u8` | The font to use for the labels |
 | `tick_count_x` | `...` | The number of ticks to use on the x axis |
 | `tick_count_y` | `...` | The number of ticks to use on the y axis |
@@ -236,6 +249,7 @@ The `axis` option contains more parameters:
 | `frame_width` | `f32` | The width of the frame |
 
 The `tick_count_x` and `tick_count_y` options are defined like so:
+
 ```zig
 tick_count_x: union(enum) {
     count: usize,
@@ -317,7 +331,7 @@ The available shapes are:
 | Shape | Description |
 | --- | --- |
 | `circle` | A circle |
-| `circle_outline` | The outline of a circle | 
+| `circle_outline` | The outline of a circle |
 | `square` | A square |
 | `square_outline` | The outline of a square |
 | `triangle` | A triangle (facing upwards) |
@@ -383,10 +397,12 @@ The parameters for the candle are as follows:
 | `color` | `?RGB (u48)` | The color of the candle (overrides the default one) |
 
 ## Supported Markers
+
 You can add a marker to the plot using the `addMarker` function.
 There are currently 2 types of markers supported:
 
 ### ShapeMarker
+
 The shape marker allows you to write the plot with a shape.
 
 The options for the shape marker are:
@@ -403,8 +419,8 @@ The options for the shape marker are:
 | `label_size` | `f32` | The size of the label |
 | `label_weight` | `FontWeight` | The weight of the label |
 
-
 ### TextMarker
+
 The Text marker is similar to the shape marker, but there is no shape, only text.
 
 The options for the text marker are:
@@ -419,6 +435,7 @@ The options for the text marker are:
 | `weight` | `FontWeight` | The weight of the text |
 
 ## Create a new plot type
+
 In order to create a new type of plot, all that is needed is to create a struct that contains an `interface` function, defined as follows:
 
 ```zig
@@ -428,6 +445,7 @@ pub fn interface(self: *const Self) Plot {
 ```
 
 The `Plot` object, contains the following fields:
+
 - a pointer to the data (`*const anyopaque`)
 - the title of the plot (`?[]const u8`) (used for the legend)
 - the color of the plot (`RGB (u48)`) (used for the legend)
@@ -438,6 +456,7 @@ The `Plot` object, contains the following fields:
 You can look at the implementation of the `Line`, `Scatter`, `Area`, `Step`, `Stem`, or `CandleStick` plots for examples.
 
 ## Create a new marker type
+
 Same as for the plots, to create a new type of marker, all that is needed is to create a struct that contains an `interface` function, defined as follows:
 
 ```zig
@@ -447,19 +466,22 @@ pub fn interface(self: *const Self) Marker {
 ```
 
 The `Marker` object, contains the following fields:
+
 - a pointer to the data (`*const anyopaque`)
 - a pointer to the draw function `*const fn(*const anyopaque, Allocator, *SVG, FigureInfo) anyerror!void`
 
 You can look at the implementation of the `ShapeMarker` or `TextMarker` for examples.
 
 ## Roadmap
+
 - Ability to set the title of the axis
 - Ability to add arrows at the end of axis
 - More plot types
-    - Bar
-    - Histogram
+  - Bar
+  - Histogram
 - Linear Interpolation with the figure border
 - Themes
 
 ### Known issue(s)
+
 - Imperfect text width calculation for the legend (only when the legend is positioned on the right)

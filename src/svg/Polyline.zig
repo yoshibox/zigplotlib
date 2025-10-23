@@ -64,7 +64,7 @@ pub fn writeTo(self: *const Polyline, writer: anytype) anyerror!void {
     try writer.print("fill-opacity=\"{d}\" ", .{self.options.fill_opacity});
     if (self.options.stroke) |stroke| try writer.print("stroke=\"#{X:0>6}\" ", .{stroke}) else try writer.writeAll("stroke=\"none\" ");
     try writer.print("stroke-opacity=\"{d}\" ", .{self.options.stroke_opacity});
-    try writer.print("stroke-width=\"{}\" ", .{self.options.stroke_width});
+    try writer.print("stroke-width=\"{f}\" ", .{self.options.stroke_width});
     try writer.print("opacity=\"{d}\" ", .{self.options.opacity});
     try writer.writeAll("/>");
 }

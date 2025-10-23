@@ -18,9 +18,7 @@ pub const LineCap = enum {
     round,
     square,
 
-    pub fn format(self: LineCap, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = fmt;
-        _ = options;
+    pub fn format(self: LineCap, writer: anytype) !void {
         switch (self) {
             .butt => try writer.writeAll("butt"),
             .round => try writer.writeAll("round"),
@@ -66,15 +64,15 @@ pub fn init(options: Options) Line {
 /// Write the line to the given writer
 pub fn writeTo(self: *const Line, writer: anytype) anyerror!void {
     try writer.writeAll("<line ");
-    try writer.print("x1=\"{}\" ", .{self.options.x1});
-    try writer.print("y1=\"{}\" ", .{self.options.y1});
-    try writer.print("x2=\"{}\" ", .{self.options.x2});
-    try writer.print("y2=\"{}\" ", .{self.options.y2});
+    try writer.print("x1=\"{f}\" ", .{self.options.x1});
+    try writer.print("y1=\"{f}\" ", .{self.options.y1});
+    try writer.print("x2=\"{f}\" ", .{self.options.x2});
+    try writer.print("y2=\"{f}\" ", .{self.options.y2});
     if (self.options.stroke) |stroke| try writer.print("stroke=\"#{X:0>6}\" ", .{stroke})
     else try writer.writeAll("stroke=\"none\" ");
     try writer.print("stroke-opacity=\"{d}\" ", .{self.options.stroke_opacity});
-    try writer.print("stroke-width=\"{}\" ", .{self.options.stroke_width});
-    try writer.print("stroke-linecap=\"{}\" ", .{self.options.stroke_linecap});
+    try writer.print("stroke-width=\"{f}\" ", .{self.options.stroke_width});
+    try writer.print("stroke-linecap=\"{f}\" ", .{self.options.stroke_linecap});
     if (self.options.stroke_dasharray) |stroke_dash_array| {
         try writer.writeAll("stroke-dasharray=\" ");
         for (stroke_dash_array) |dash| {

@@ -2,7 +2,7 @@
     .name = .zigplotlib,
     .version = "0.1.4",
     .fingerprint = 0x1220c9f9d7b4cb25,
-    .minimum_zig_version = "0.14.0",
+    .minimum_zig_version = "0.15.2",
     .dependencies = .{},
 
     .paths = .{

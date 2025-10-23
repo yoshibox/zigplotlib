@@ -9,9 +9,7 @@ pub const LengthPercentAuto = union(enum) {
     /// Automatic length
     auto: void,
 
-    pub fn format(self: LengthPercentAuto, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = fmt;
-        _ = options;
+    pub fn format(self: LengthPercentAuto, writer: anytype) !void {
         switch (self) {
             .pixel => |value| try writer.print("{d}", .{value}),
             .percent => |value| try writer.print("{d}%", .{value}),
@@ -27,9 +25,7 @@ pub const LengthPercent = union(enum) {
     /// The length in percent (of the parent).
     percent: f32,
 
-    pub fn format(self: LengthPercent, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = fmt;
-        _ = options;
+    pub fn format(self: LengthPercent, writer: anytype) !void {
         switch (self) {
             .pixel => |value| try writer.print("{d}", .{value}),
             .percent => |value| try writer.print("{d}%", .{value}),

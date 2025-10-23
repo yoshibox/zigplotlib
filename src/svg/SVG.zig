@@ -8,7 +8,7 @@ pub const Polyline = @import("Polyline.zig");
 pub const Text = @import("Text.zig");
 pub const Path = @import("Path.zig");
 
-pub usingnamespace @import("kind.zig");
+pub const Kind = @import("kind.zig").Kind;
 
 const SVG = @This();
 
@@ -29,7 +29,7 @@ viewbox: ViewBox,
 
 /// Initialize the SVG with the given allocator, width and height
 pub fn init(allocator: Allocator, width: f32, height: f32) SVG {
-    return SVG{ .allocator = allocator, .data = SVG.Kind.List.init(allocator), .width = width, .height = height, .viewbox = ViewBox{
+    return SVG{ .allocator = allocator, .data = .empty, .width = width, .height = height, .viewbox = ViewBox{
         .x = 0,
         .y = 0,
         .width = width,
@@ -38,16 +38,16 @@ pub fn init(allocator: Allocator, width: f32, height: f32) SVG {
 }
 
 /// Deintiialize the SVG
-pub fn deinit(self: *const SVG) void {
+pub fn deinit(self: *SVG) void {
     for (self.data.items) |kind| {
         kind.deinit();
     }
-    self.data.deinit();
+    self.data.deinit(self.allocator);
 }
 
 /// Add a Kind to the SVG
 pub fn add(self: *SVG, kind: SVG.Kind) !void {
-    try self.data.append(kind);
+    try self.data.append(self.allocator, kind);
 }
 
 /// Add a Line to the SVG
@@ -106,4 +106,5 @@ pub fn writeTo(self: *const SVG, writer: anytype) anyerror!void {
     }
     // End of the SVG
     try writer.writeAll("</svg>");
+    try writer.flush();
 }

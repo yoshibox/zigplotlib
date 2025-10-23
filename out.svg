@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="612" height="612" viewBox="-50 -50 612 612" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect x="-50" y="-50" width="612" height="612" rx="auto" ry="auto" fill="#FFFFFF" fill-opacity="1e0" stroke="none" stroke-opacity="1e0" stroke-width="1" opacity="1e0" />
+<rect x="-50" y="-50" width="612" height="612" rx="auto" ry="auto" fill="#FFFFFF" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" />
 <text x="256" y="-8" dx="0" dy="0" textLength="none" fill="#000000" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" font-family="sans-serif" font-size="20px" font-weight="bold" text-anchor="middle" dominant-baseline="text-after-edge" >Example plot</text>
 <line x1="88.27586" y1="0" x2="88.27586" y2="512" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="0.2" />
 <line x1="158.89655" y1="0" x2="158.89655" y2="512" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="0.2" />
@@ -49,7 +49,7 @@
 <polyline points="0 365.7143 0 448.83118 88.27586 415.5844 176.55173 448.83118 176.55173 365.7143 " fill="#FFFF00" fill-opacity="0.5" stroke="#FFFF00" stroke-opacity="1" stroke-width="2" opacity="1" />
 <line x1="88.27586" y1="0" x2="88.27586" y2="512" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="1" />
 <line x1="0" y1="365.7143" x2="512" y2="365.7143" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="1" />
-<rect x="0" y="0" width="512" height="512" rx="auto" ry="auto" fill="none" fill-opacity="1e0" stroke="#000000" stroke-opacity="1e0" stroke-width="4" opacity="1e0" />
+<rect x="0" y="0" width="512" height="512" rx="auto" ry="auto" fill="none" fill-opacity="1" stroke="#000000" stroke-opacity="1" stroke-width="4" opacity="1" />
 <text x="88.27586" y="522" dx="0" dy="0" textLength="none" fill="#000000" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" font-family="sans-serif" font-size="10px" font-weight="normal" text-anchor="middle" dominant-baseline="hanging" >0.00</text>
 <text x="158.89655" y="522" dx="0" dy="0" textLength="none" fill="#000000" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" font-family="sans-serif" font-size="10px" font-weight="normal" text-anchor="middle" dominant-baseline="hanging" >4.00</text>
 <text x="229.51724" y="522" dx="0" dy="0" textLength="none" fill="#000000" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" font-family="sans-serif" font-size="10px" font-weight="normal" text-anchor="middle" dominant-baseline="hanging" >8.00</text>

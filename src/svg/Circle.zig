@@ -46,16 +46,16 @@ pub fn init(options: Options) Circle {
 /// Write the circle to the given writer
 pub fn writeTo(self: *const Circle, writer: anytype) anyerror!void {
     try writer.writeAll("<circle ");
-    try writer.print("cx=\"{}\" ", .{self.options.center_x});
-    try writer.print("cy=\"{}\" ", .{self.options.center_y});
-    try writer.print("r=\"{}\" ", .{self.options.radius});
+    try writer.print("cx=\"{f}\" ", .{self.options.center_x});
+    try writer.print("cy=\"{f}\" ", .{self.options.center_y});
+    try writer.print("r=\"{f}\" ", .{self.options.radius});
     if (self.options.fill) |fill| try writer.print("fill=\"#{X:0>6}\" ", .{fill})
     else try writer.writeAll("fill=\"none\" ");
     try writer.print("fill-opacity=\"{d}\" ", .{self.options.fill_opacity});
     if (self.options.stroke) |stroke| try writer.print("stroke=\"#{X:0>6}\" ", .{stroke})
     else try writer.writeAll("stroke=\"none\" ");
     try writer.print("stroke-opacity=\"{d}\" ", .{self.options.stroke_opacity});
-    try writer.print("stroke-width=\"{}\" ", .{self.options.stroke_width});
+    try writer.print("stroke-width=\"{f}\" ", .{self.options.stroke_width});
     try writer.print("opacity=\"{d}\" ", .{self.options.opacity});
     try writer.writeAll("/>");
 }

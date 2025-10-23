@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="612" height="612" viewBox="-50 -50 612 612" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect x="-50" y="-50" width="612" height="612" rx="auto" ry="auto" fill="#FFFFFF" fill-opacity="1e0" stroke="none" stroke-opacity="1e0" stroke-width="1" opacity="1e0" />
+<rect x="-50" y="-50" width="612" height="612" rx="auto" ry="auto" fill="#FFFFFF" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" />
 <line x1="34.133335" y1="0" x2="34.133335" y2="512" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="0.2" />
 <line x1="113.77779" y1="0" x2="113.77779" y2="512" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="0.2" />
 <line x1="193.42223" y1="0" x2="193.42223" y2="512" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="0.2" />
@@ -48,7 +48,7 @@
 <line x1="477.8667" y1="258.58783" x2="477.8667" y2="207.89047" stroke="#0000FF" stroke-opacity="1" stroke-width="4" stroke-linecap="butt" opacity="1" />
 <circle cx="477.8667" cy="207.89047" r="4" fill="#0000FF" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="0" opacity="1" />
 <line x1="0" y1="258.58783" x2="512" y2="258.58783" stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" opacity="1" />
-<rect x="0" y="0" width="512" height="512" rx="auto" ry="auto" fill="none" fill-opacity="1e0" stroke="#000000" stroke-opacity="1e0" stroke-width="4" opacity="1e0" />
+<rect x="0" y="0" width="512" height="512" rx="auto" ry="auto" fill="none" fill-opacity="1" stroke="#000000" stroke-opacity="1" stroke-width="4" opacity="1" />
 <text x="34.133335" y="522" dx="0" dy="0" textLength="none" fill="#000000" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" font-family="sans-serif" font-size="10px" font-weight="normal" text-anchor="middle" dominant-baseline="hanging" >0.00</text>
 <text x="113.77779" y="522" dx="0" dy="0" textLength="none" fill="#000000" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" font-family="sans-serif" font-size="10px" font-weight="normal" text-anchor="middle" dominant-baseline="hanging" >2.33</text>
 <text x="193.42223" y="522" dx="0" dy="0" textLength="none" fill="#000000" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-width="1" opacity="1" font-family="sans-serif" font-size="10px" font-weight="normal" text-anchor="middle" dominant-baseline="hanging" >4.67</text>

@@ -5,19 +5,19 @@ pub fn default(
     options: struct {
         comptime precision: ?u8 = 2,
     },
-) *const fn (*std.ArrayList(u8), f32) anyerror!void {
+) *const fn (std.mem.Allocator, *std.ArrayList(u8), f32) anyerror!void {
     if (options.precision == null) {
         return &struct {
-            pub fn lambda(buffer: *std.ArrayList(u8), value: f32) anyerror!void {
-                try buffer.writer().print("{d}", .{value});
+            pub fn lambda(allocator: std.mem.Allocator, buffer: *std.ArrayList(u8), value: f32) anyerror!void {
+                try buffer.print(allocator, "{d}", .{value});
             }
         }.lambda;
     } else {
         const precision_str = std.fmt.comptimePrint("{}", .{options.precision.?});
 
         return &struct {
-            pub fn lambda(buffer: *std.ArrayList(u8), value: f32) anyerror!void {
-                try buffer.writer().print("{d:." ++ precision_str ++ "}", .{value});
+            pub fn lambda(allocator: std.mem.Allocator, buffer: *std.ArrayList(u8), value: f32) anyerror!void {
+                try buffer.print(allocator, "{d:." ++ precision_str ++ "}", .{value});
             }
         }.lambda;
     }

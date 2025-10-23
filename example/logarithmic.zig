@@ -71,5 +71,9 @@ pub fn main() !void {
     var file = try std.fs.cwd().createFile("example/out/logarithmic.svg", .{});
     defer file.close();
 
-    try svg.writeTo(file.writer());
+    var file_buffer: [1024]u8 = undefined;
+    var file_writer = file.writer(&file_buffer);
+    const file_int = &file_writer.interface;
+
+    try svg.writeTo(file_int);
 }

@@ -108,9 +108,9 @@ pub const Style = struct {
         /// Whether to show the labels on the y-axis
         show_y_labels: bool = true,
         /// The formatter for the data on the x-axis
-        x_labels_formatter: ?*const fn (*std.ArrayList(u8), f32) anyerror!void = null,
+        x_labels_formatter: ?*const fn (Allocator, *std.ArrayList(u8), f32) anyerror!void = null,
         /// The formatter for the data on the y-axis
-        y_labels_formatter: ?*const fn (*std.ArrayList(u8), f32) anyerror!void = null,
+        y_labels_formatter: ?*const fn (Allocator, *std.ArrayList(u8), f32) anyerror!void = null,
         /// Whether to show the grid on the x-axis
         show_grid_x: bool = true,
         /// Whether to show the grid on the y-axis
@@ -157,30 +157,30 @@ pub fn init(allocator: Allocator, style: Style) Figure {
     return Figure{
         .allocator = allocator,
         .arena = std.heap.ArenaAllocator.init(allocator),
-        .plots = Plot.List.init(allocator),
-        .markers = Marker.List.init(allocator),
+        .plots = .empty,
+        .markers = .empty,
         .style = style,
     };
 }
 
 /// Deinitialize the figure.
-pub fn deinit(self: *const Figure) void {
+pub fn deinit(self: *Figure) void {
     self.arena.deinit();
-    self.plots.deinit();
-    self.markers.deinit();
+    self.plots.deinit(self.allocator);
+    self.markers.deinit(self.allocator);
 }
 
 /// Add a plot to the figure, the given `plot` should be of type `Plot` or have the interface method that returns a
 /// `Plot`.
 pub fn addPlot(self: *Figure, plot: anytype) !void {
     if (@TypeOf(plot) == Plot) {
-        try self.plots.append(plot);
+        try self.plots.append(self.allocator, plot);
     } else {
         intf.ensureImplement(struct { interface: fn (*const anyopaque) Plot }, @TypeOf(plot));
 
         const mem = try self.arena.allocator().create(@TypeOf(plot));
         mem.* = plot;
-        try self.plots.append(mem.interface());
+        try self.plots.append(self.allocator, mem.interface());
     }
 }
 
@@ -194,7 +194,7 @@ pub fn addMarker(self: *Figure, marker: anytype) !void {
 
         const mem = try self.arena.allocator().create(@TypeOf(marker));
         mem.* = marker;
-        try self.markers.append(mem.interface());
+        try self.markers.append(self.allocator, mem.interface());
     }
 }
 
@@ -563,12 +563,12 @@ fn drawYLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
 
         const y_value = info.computeYInv(y);
 
-        var buffer = std.ArrayList(u8).init(self.arena.allocator());
+        var buffer = std.ArrayList(u8).empty;
 
         if (self.style.axis.y_labels_formatter) |formatter| {
-            try formatter(&buffer, y_value);
+            try formatter(self.allocator, &buffer, y_value);
         } else {
-            try buffer.writer().print("{d:.2}", .{y_value});
+            try buffer.print(self.allocator, "{d:.2}", .{y_value});
         }
 
         try svg.addText(.{
@@ -579,7 +579,8 @@ fn drawYLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
             .font_family = self.style.axis.label_font,
             .font_size = .{ .pixel = self.style.axis.label_size },
             .fill = self.style.axis.label_color,
-            .text = try buffer.toOwnedSlice(),
+            .text = try buffer.toOwnedSlice(self.allocator),
+            .allocator = self.allocator,
         });
     }
 
@@ -589,11 +590,11 @@ fn drawYLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
 
         const y_value = info.computeYInv(y);
 
-        var buffer = std.ArrayList(u8).init(self.arena.allocator());
+        var buffer = std.ArrayList(u8).empty;
         if (self.style.axis.y_labels_formatter) |formatter| {
-            try formatter(&buffer, y_value);
+            try formatter(self.allocator, &buffer, y_value);
         } else {
-            try buffer.writer().print("{d:.2}", .{y_value});
+            try buffer.print(self.allocator, "{d:.2}", .{y_value});
         }
 
         try svg.addText(.{
@@ -604,7 +605,8 @@ fn drawYLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
             .font_family = self.style.axis.label_font,
             .font_size = .{ .pixel = self.style.axis.label_size },
             .fill = self.style.axis.label_color,
-            .text = try buffer.toOwnedSlice(),
+            .text = try buffer.toOwnedSlice(self.allocator),
+            .allocator = self.allocator,
         });
     }
 }
@@ -625,11 +627,11 @@ fn drawYLabelsLog(self: *Figure, svg: *SVG, info: FigureInfo) !void {
 
         const y_value = std.math.pow(f32, 10, i);
 
-        var buffer = std.ArrayList(u8).init(self.arena.allocator());
+        var buffer = std.ArrayList(u8).empty;
         if (self.style.axis.y_labels_formatter) |formatter| {
-            try formatter(&buffer, y_value);
+            try formatter(self.allocator, &buffer, y_value);
         } else {
-            try buffer.writer().print("{d:.2}", .{y_value});
+            try buffer.print(self.allocator, "{d:.2}", .{y_value});
         }
 
         try svg.addText(.{
@@ -640,7 +642,8 @@ fn drawYLabelsLog(self: *Figure, svg: *SVG, info: FigureInfo) !void {
             .font_family = self.style.axis.label_font,
             .font_size = .{ .pixel = self.style.axis.label_size },
             .fill = self.style.axis.label_color,
-            .text = try buffer.toOwnedSlice(),
+            .text = try buffer.toOwnedSlice(self.allocator),
+            .allocator = self.allocator,
         });
     }
 }
@@ -666,11 +669,11 @@ fn drawXLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
 
         const x_value = info.computeXInv(x);
 
-        var buffer = std.ArrayList(u8).init(self.arena.allocator());
+        var buffer = std.ArrayList(u8).empty;
         if (self.style.axis.x_labels_formatter) |formatter| {
-            try formatter(&buffer, x_value);
+            try formatter(self.allocator, &buffer, x_value);
         } else {
-            try buffer.writer().print("{d:.2}", .{x_value});
+            try buffer.print(svg.allocator, "{d:.2}", .{x_value});
         }
 
         try svg.addText(.{
@@ -681,7 +684,8 @@ fn drawXLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
             .font_family = self.style.axis.label_font,
             .font_size = .{ .pixel = self.style.axis.label_size },
             .fill = self.style.axis.label_color,
-            .text = try buffer.toOwnedSlice(),
+            .text = try buffer.toOwnedSlice(self.allocator),
+            .allocator = self.allocator,
         });
     }
 
@@ -691,11 +695,11 @@ fn drawXLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
 
         const x_value = info.computeXInv(x);
 
-        var buffer = std.ArrayList(u8).init(self.arena.allocator());
+        var buffer = std.ArrayList(u8).empty;
         if (self.style.axis.x_labels_formatter) |formatter| {
-            try formatter(&buffer, x_value);
+            try formatter(self.allocator, &buffer, x_value);
         } else {
-            try buffer.writer().print("{d:.2}", .{x_value});
+            try buffer.print(svg.allocator, "{d:.2}", .{x_value});
         }
 
         try svg.addText(.{
@@ -706,7 +710,8 @@ fn drawXLabelsLinear(self: *Figure, svg: *SVG, info: FigureInfo) !void {
             .font_family = self.style.axis.label_font,
             .font_size = .{ .pixel = self.style.axis.label_size },
             .fill = self.style.axis.label_color,
-            .text = try buffer.toOwnedSlice(),
+            .text = try buffer.toOwnedSlice(self.allocator),
+            .allocator = self.allocator,
         });
     }
 }
@@ -727,11 +732,11 @@ fn drawXLabelsLog(self: *Figure, svg: *SVG, info: FigureInfo) !void {
 
         const x_value = std.math.pow(f32, 10, i);
 
-        var buffer = std.ArrayList(u8).init(self.arena.allocator());
+        var buffer = std.ArrayList(u8).empty;
         if (self.style.axis.x_labels_formatter) |formatter| {
-            try formatter(&buffer, x_value);
+            try formatter(self.allocator, &buffer, x_value);
         } else {
-            try buffer.writer().print("{d:.2}", .{x_value});
+            try buffer.print(self.allocator, "{d:.2}", .{x_value});
         }
 
         try svg.addText(.{
@@ -742,7 +747,8 @@ fn drawXLabelsLog(self: *Figure, svg: *SVG, info: FigureInfo) !void {
             .font_family = self.style.axis.label_font,
             .font_size = .{ .pixel = self.style.axis.label_size },
             .fill = self.style.axis.label_color,
-            .text = try buffer.toOwnedSlice(),
+            .text = try buffer.toOwnedSlice(self.allocator),
+            .allocator = self.allocator,
         });
     }
 }

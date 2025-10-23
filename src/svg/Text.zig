@@ -46,9 +46,7 @@ pub const FontSize = union(enum) {
     /// Math value
     math: void,
 
-    pub fn format(self: FontSize, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = fmt;
-        _ = options;
+    pub fn format(self: FontSize, writer: anytype) !void {
         switch (self) {
             .pixel => |value| try writer.print("{d}px", .{value}),
             .em => |value| try writer.print("{d}em", .{value}),
@@ -97,9 +95,7 @@ pub const FontWeight = enum {
     /// The bolder font weight
     bolder,
 
-    pub fn format(self: FontWeight, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = fmt;
-        _ = options;
+    pub fn format(self: FontWeight, writer: anytype) !void {
         switch (self) {
             .normal => try writer.writeAll("normal"),
             .bold => try writer.writeAll("bold"),
@@ -127,9 +123,7 @@ pub const TextAnchor = enum {
     /// The end anchor
     end,
 
-    pub fn format(self: TextAnchor, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = fmt;
-        _ = options;
+    pub fn format(self: TextAnchor, writer: anytype) !void {
         switch (self) {
             .start => try writer.writeAll("start"),
             .middle => try writer.writeAll("middle"),
@@ -165,9 +159,7 @@ pub const DominantBaseline = enum {
     /// The text before edge baseline
     text_before_edge,
 
-    pub fn format(self: DominantBaseline, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = fmt;
-        _ = options;
+    pub fn format(self: DominantBaseline, writer: anytype) !void {
         switch (self) {
             .auto => try writer.writeAll("auto"),
             .use_script => try writer.writeAll("use-script"),
@@ -245,11 +237,11 @@ pub fn deinit(self: *const Text) void {
 /// Write the text to the given writer
 pub fn writeTo(self: *const Text, writer: anytype) anyerror!void {
     try writer.writeAll("<text ");
-    try writer.print("x=\"{}\" ", .{self.options.x});
-    try writer.print("y=\"{}\" ", .{self.options.y});
-    try writer.print("dx=\"{}\" ", .{self.options.dx});
-    try writer.print("dy=\"{}\" ", .{self.options.dy});
-    if (self.options.length) |length_| try writer.print("textLength=\"{}\" ", .{length_})
+    try writer.print("x=\"{f}\" ", .{self.options.x});
+    try writer.print("y=\"{f}\" ", .{self.options.y});
+    try writer.print("dx=\"{f}\" ", .{self.options.dx});
+    try writer.print("dy=\"{f}\" ", .{self.options.dy});
+    if (self.options.length) |length_| try writer.print("textLength=\"{f}\" ", .{length_})
     else try writer.writeAll("textLength=\"none\" ");
     if (self.options.fill) |fill| try writer.print("fill=\"#{X:0>6}\" ", .{fill})
     else try writer.writeAll("fill=\"none\" ");
@@ -257,13 +249,13 @@ pub fn writeTo(self: *const Text, writer: anytype) anyerror!void {
     if (self.options.stroke) |stroke| try writer.print("stroke=\"#{X:0>6}\" ", .{stroke})
     else try writer.writeAll("stroke=\"none\" ");
     try writer.print("stroke-opacity=\"{d}\" ", .{self.options.stroke_opacity});
-    try writer.print("stroke-width=\"{}\" ", .{self.options.stroke_width});
+    try writer.print("stroke-width=\"{f}\" ", .{self.options.stroke_width});
     try writer.print("opacity=\"{d}\" ", .{self.options.opacity});
     try writer.print("font-family=\"{s}\" ", .{self.options.font_family});
-    try writer.print("font-size=\"{}\" ", .{self.options.font_size});
-    try writer.print("font-weight=\"{}\" ", .{self.options.font_weight});
-    try writer.print("text-anchor=\"{}\" ", .{self.options.text_anchor});
-    try writer.print("dominant-baseline=\"{}\" ", .{self.options.dominant_baseline});
+    try writer.print("font-size=\"{f}\" ", .{self.options.font_size});
+    try writer.print("font-weight=\"{f}\" ", .{self.options.font_weight});
+    try writer.print("text-anchor=\"{f}\" ", .{self.options.text_anchor});
+    try writer.print("dominant-baseline=\"{f}\" ", .{self.options.dominant_baseline});
     try writer.print(">{s}</text>", .{self.options.text});
 }
 
