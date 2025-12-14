@@ -235,7 +235,7 @@ pub fn deinit(self: *const Text) void {
 }
 
 /// Write the text to the given writer
-pub fn writeTo(self: *const Text, writer: anytype) anyerror!void {
+pub fn writeTo(self: *const Text, writer: *std.Io.Writer) std.Io.Writer.Error!void {
     try writer.writeAll("<text ");
     try writer.print("x=\"{f}\" ", .{self.options.x});
     try writer.print("y=\"{f}\" ", .{self.options.y});

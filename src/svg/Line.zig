@@ -62,7 +62,7 @@ pub fn init(options: Options) Line {
 }
 
 /// Write the line to the given writer
-pub fn writeTo(self: *const Line, writer: anytype) anyerror!void {
+pub fn writeTo(self: *const Line, writer: *std.Io.Writer) std.Io.Writer.Error!void {
     try writer.writeAll("<line ");
     try writer.print("x1=\"{f}\" ", .{self.options.x1});
     try writer.print("y1=\"{f}\" ", .{self.options.y1});

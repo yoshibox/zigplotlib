@@ -21,7 +21,7 @@ pub const Kind = union(enum) {
     path: SVG.Path,
 
     /// Write the Kind to the given writer
-    pub fn writeTo(self: *const Kind, writer: anytype) anyerror!void {
+    pub fn writeTo(self: *const Kind, writer: *std.Io.Writer) std.Io.Writer.Error!void {
         try switch (self.*) {
             .line => |line| line.writeTo(writer),
             .rect => |rect| rect.writeTo(writer),

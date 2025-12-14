@@ -44,7 +44,7 @@ pub fn init(options: Options) Circle {
 }
 
 /// Write the circle to the given writer
-pub fn writeTo(self: *const Circle, writer: anytype) anyerror!void {
+pub fn writeTo(self: *const Circle, writer: *std.Io.Writer) std.Io.Writer.Error!void {
     try writer.writeAll("<circle ");
     try writer.print("cx=\"{f}\" ", .{self.options.center_x});
     try writer.print("cy=\"{f}\" ", .{self.options.center_y});

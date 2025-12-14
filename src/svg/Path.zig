@@ -129,7 +129,7 @@ pub const Command = union(enum) {
     ClosePath: void,
 
     /// Write the command to the given writer
-    pub fn writeTo(self: *const Command, writer: anytype) anyerror!void {
+    pub fn writeTo(self: *const Command, writer: *std.Io.Writer) std.Io.Writer.Error!void {
         switch (self.*) {
             .MoveTo => {
                 try writer.print("M {d} {d}", .{ self.MoveTo.x, self.MoveTo.y });
@@ -283,7 +283,7 @@ pub fn deinit(self: *const Path) void {
 }
 
 /// Write the path to the given writer
-pub fn writeTo(self: *const Path, writer: anytype) anyerror!void {
+pub fn writeTo(self: *const Path, writer: *std.Io.Writer) std.Io.Writer.Error!void {
     try writer.writeAll("<path");
     if (self.options.commands) |commands| {
         try writer.writeAll(" d=\"");

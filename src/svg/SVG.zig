@@ -89,7 +89,7 @@ const SVG_HEADER =
 ;
 
 /// Write the SVG to the given writer
-pub fn writeTo(self: *const SVG, writer: anytype) anyerror!void {
+pub fn writeTo(self: *const SVG, writer: *std.Io.Writer) std.Io.Writer.Error!void {
     // Write the header
     try writer.print(SVG_HEADER, .{
         self.width,

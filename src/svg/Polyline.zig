@@ -51,7 +51,7 @@ pub fn deinit(self: *const Polyline) void {
 }
 
 /// Write the Polyline to the given writer.
-pub fn writeTo(self: *const Polyline, writer: anytype) anyerror!void {
+pub fn writeTo(self: *const Polyline, writer: *std.Io.Writer) std.Io.Writer.Error!void {
     try writer.writeAll("<polyline ");
     if (self.options.points) |points| {
         try writer.writeAll("points=\"");

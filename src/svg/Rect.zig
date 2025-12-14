@@ -50,7 +50,7 @@ pub fn init(options: Options) Rect {
 }
 
 /// Write the rectangle to the given writer
-pub fn writeTo(self: *const Rect, writer: anytype) anyerror!void {
+pub fn writeTo(self: *const Rect, writer: *std.Io.Writer) std.Io.Writer.Error!void {
     try writer.writeAll("<rect ");
     try writer.print("x=\"{f}\" ", .{self.options.x});
     try writer.print("y=\"{f}\" ", .{self.options.y});
